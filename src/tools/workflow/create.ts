@@ -40,6 +40,11 @@ export class CreateWorkflowHandler extends BaseWorkflowToolHandler {
       if (parsedConnections && typeof parsedConnections !== 'object') {
         throw new N8nApiError('Parameter "connections" must be an object');
       }
+
+      // Validate tags if provided
+      if (parsedTags && !Array.isArray(parsedTags)) {
+        throw new N8nApiError('Parameter "tags" must be an array');
+      }
       
       // Prepare workflow object
       const workflowData: Record<string, any> = {

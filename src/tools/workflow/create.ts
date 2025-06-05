@@ -7,6 +7,7 @@
 import { BaseWorkflowToolHandler } from './base-handler.js';
 import { ToolCallResult, ToolDefinition } from '../../types/index.js';
 import { N8nApiError } from '../../errors/index.js';
+import { parseIfJsonString } from '../../utils/json.js';
 
 /**
  * Handler for the create_workflow tool
@@ -21,18 +22,22 @@ export class CreateWorkflowHandler extends BaseWorkflowToolHandler {
   async execute(args: Record<string, any>): Promise<ToolCallResult> {
     return this.handleExecution(async (args) => {
       const { name, nodes, connections, active, tags } = args;
+
+      const parsedNodes: any = parseIfJsonString(nodes);
+      const parsedConnections: any = parseIfJsonString(connections);
+      const parsedTags: any = parseIfJsonString(tags);
       
       if (!name) {
         throw new N8nApiError('Missing required parameter: name');
       }
-      
+
       // Validate nodes if provided
-      if (nodes && !Array.isArray(nodes)) {
+      if (parsedNodes && !Array.isArray(parsedNodes)) {
         throw new N8nApiError('Parameter "nodes" must be an array');
       }
-      
+
       // Validate connections if provided
-      if (connections && typeof connections !== 'object') {
+      if (parsedConnections && typeof parsedConnections !== 'object') {
         throw new N8nApiError('Parameter "connections" must be an object');
       }
       
@@ -43,9 +48,9 @@ export class CreateWorkflowHandler extends BaseWorkflowToolHandler {
       };
       
       // Add optional fields if provided
-      if (nodes) workflowData.nodes = nodes;
-      if (connections) workflowData.connections = connections;
-      if (tags) workflowData.tags = tags;
+      if (parsedNodes) workflowData.nodes = parsedNodes;
+      if (parsedConnections) workflowData.connections = parsedConnections;
+      if (parsedTags) workflowData.tags = parsedTags;
       
       // Create the workflow
       const workflow = await this.apiService.createWorkflow(workflowData);

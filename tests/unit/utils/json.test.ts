@@ -13,6 +13,10 @@ describe('parseIfJsonString', () => {
     expect(result).toBe(input);
   });
 
+  it('should throw when invalid JSON string is provided with throwOnError', () => {
+    expect(() => parseIfJsonString('{invalid}', { throwOnError: true, paramName: 'test' })).toThrow('Invalid JSON string for test parameter');
+  });
+
   it('should return original value when value is not a string', () => {
     const obj = { a: 1 };
     expect(parseIfJsonString(obj)).toBe(obj);

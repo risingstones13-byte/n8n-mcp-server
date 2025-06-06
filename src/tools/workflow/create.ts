@@ -23,9 +23,9 @@ export class CreateWorkflowHandler extends BaseWorkflowToolHandler {
     return this.handleExecution(async (args) => {
       const { name, nodes, connections, active, tags } = args;
 
-      const parsedNodes: any = parseIfJsonString(nodes);
-      const parsedConnections: any = parseIfJsonString(connections);
-      const parsedTags: any = parseIfJsonString(tags);
+      const parsedNodes: any = parseIfJsonString(nodes, { throwOnError: true, paramName: 'nodes' });
+      const parsedConnections: any = parseIfJsonString(connections, { throwOnError: true, paramName: 'connections' });
+      const parsedTags: any = parseIfJsonString(tags, { throwOnError: true, paramName: 'tags' });
       
       if (!name) {
         throw new N8nApiError('Missing required parameter: name');

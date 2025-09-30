@@ -22,12 +22,17 @@ export class N8nApiClient {
    */
   constructor(config: EnvConfig) {
     this.config = config;
+    const headers: Record<string, string> = {
+      'Accept': 'application/json',
+    };
+
+    if (config.n8nApiKey) {
+      headers['X-N8N-API-KEY'] = config.n8nApiKey;
+    }
+
     this.axiosInstance = axios.create({
       baseURL: config.n8nApiUrl,
-      headers: {
-        'X-N8N-API-KEY': config.n8nApiKey,
-        'Accept': 'application/json',
-      },
+      headers: headers,
       timeout: 10000, // 10 seconds
     });
 

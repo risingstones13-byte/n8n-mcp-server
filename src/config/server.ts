@@ -93,6 +93,7 @@ function setupToolCallRequestHandler(server: Server): void {
     let result: ToolCallResult;
 
     try {
+      console.error(`Received tool call for: ${toolName}`); // Add this line
       // Handle "prompts/list" as a special case, returning an empty success response
       // This is to address client calls for a method not central to n8n-mcp-server's direct n8n integration.
       if (toolName === 'prompts/list') {
